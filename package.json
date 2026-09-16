@@ -1,12 +1,21 @@
 {
   "name": "web-practice",
   "version": "1.0.0",
-  "description": "",
+  "description": "web-practice",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "me",
+  "license": "ISC",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DuxngLee/web-practice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DuxngLee/web-practice/issues"
+  },
+  "homepage": "https://github.com/DuxngLee/web-practice#readme"
 }
