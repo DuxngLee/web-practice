@@ -2,6 +2,7 @@
 import express from "express"; //import express
 import "dotenv/config"
 import webRoutes from "./routes/web";
+import getConnection from "./config/database";
 
 const app = express(); // tạo express application
 const PORT = process.env.PORT || 8888; //init port
