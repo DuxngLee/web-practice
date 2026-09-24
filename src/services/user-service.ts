@@ -1,8 +1,16 @@
 import mysql from "mysql2/promise";
-import getConnection from "../config/database";
+import getConnection from "config/database";
 
-const handleCreateUserService = ( fullName: string, email: string, address: string) => {
-    console.log("ok");
+const handleCreateUserService = async ( fullName: string, email: string, address: string) => {
+    const connection = await getConnection();
+    try {
+        const sql = 'INSERT INTO `users`(`name`, `email`, `address`) VALUES (?, ?, ?)';
+        const values = [fullName, email, address];
+        const [result] = await connection.execute(sql, values);
+        return result;
+    } catch (err) {
+        return [];
+    }
 }
 
 const getAllUsersService = async () => {

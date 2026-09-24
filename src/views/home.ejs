@@ -24,15 +24,17 @@
                 <th>Action</th>
             </thead>
             <tbody>
-                <% users.forEach( function (user) { %>
-                    <td><%= user.id %></td>
-                    <td><%= user.name %></td>
-                    <td><%= user.address %></td>
-                    <td><%= user.email %></td>
-                    <td>
-                        <button class="btn btn-danger">DELETE</button>
-                    </td>
-                <% }) %>
+            <% users.forEach( function (user) { %>
+                    <tr>
+                        <td><%= user.id %></td>
+                        <td><%= user.name %></td>
+                        <td><%= user.address %></td>
+                        <td><%= user.email %></td>
+                        <td>
+                            <button class="btn btn-danger">DELETE</button>
+                        </td>
+                    </tr>
+            <% }) %>
             </tbody>
         </table>
     </div>
