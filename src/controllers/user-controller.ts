@@ -5,7 +5,6 @@ import {
     handleDeleteUserService,
     getUserByIdService, handleUpdateUserService
 } from "services/user-service";
-import getConnection from "config/database";
 
 const getHomePage = async (req: Request, res: Response) => {
     const users = await getAllUsersService();
@@ -19,8 +18,8 @@ const getCreateUserPage = (req: Request, res: Response) => {
 }
 
 const postCreateUser = async (req: Request, res: Response) => {
-    const {name, email, address} = req.body;
-    await handleCreateUserService(name, email, address);
+    const {name, address} = req.body;
+    await handleCreateUserService(name, address);
     return res.redirect("/");
 }
 
@@ -40,8 +39,8 @@ const getUserById = async (req: Request<{ id: string }>, res: Response) => {
 }
 
 const postUpdateUser = async (req: Request, res: Response) => {
-    const { id, name, email, address } = req.body;
-    await handleUpdateUserService( id, name, email, address );
+    const { id, name, address } = req.body;
+    await handleUpdateUserService( id, name, address );
     return res.redirect("/");
 }
 
