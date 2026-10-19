@@ -1,12 +1,20 @@
 import mysql from "mysql2/promise";
 import getConnection from "config/database";
 import {prisma} from "config/client";
+import {ACCOUNT_TYPE} from "config/constant";
+import bcrypt from "bcrypt";
 
-const handleCreateUserService = async ( name: string, address: string) => {
+const handleCreateUserService = async ( name: string, email: string, address: string, phone: string, avatar: string | null ) => {
+    const hashedPassword = await bcrypt.hash("123456", 10);
     const newUser = await prisma.user.create({
         data: {
             fullName: name,
-            address: address
+            username: email,
+            address: address,
+            phone: phone,
+            accountType: ACCOUNT_TYPE.SYSTEM,
+            avatar: avatar,
+            password: hashedPassword,
         }
     });
     return newUser;
@@ -35,17 +43,24 @@ const getUserByIdService = async (id: string) => {
     return getUser;
 }
 
-const handleUpdateUserService = async (id: string, name: string, address: string) => {
+const handleUpdateUserService = async (id: string, name: string, email: string, address: string) => {
     const updateUser = await prisma.user.update({
         where: {
             id: +id
         },
         data: {
             fullName: name,
+            username: email,
             address: address
         }
     });
     return updateUser;
 }
 
-export { handleCreateUserService, getAllUsersService, handleDeleteUserService, getUserByIdService, handleUpdateUserService };
+export {
+    handleCreateUserService,
+    getAllUsersService,
+    handleDeleteUserService,
+    getUserByIdService,
+    handleUpdateUserService
+};

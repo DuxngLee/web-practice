@@ -1,28 +1,29 @@
 import express, {Express} from 'express';
 import {
+    getAdminUserPage,
     getCreateUserPage,
-    getHomePage,
     getUserById,
     postCreateUser,
     postDeleteUser,
     postUpdateUser
 } from "controllers/user-controller";
 import {getAdminPage} from "controllers/admin/admin-controller";
+import fileUploadMiddleware from "../middleware/multer";
 const router = express.Router();
 
 const webRoutes = (app: Express) => {
-    router.get('/', getHomePage);
-    router.get('/create-user', getCreateUserPage);
-    router.get('/get-user-by-id/:id', getUserById);
-    router.post('/handle-create-user', postCreateUser);
-    router.post('/post-delete-user/:id', postDeleteUser);
-    router.post('/handle-update-user', postUpdateUser);
+    router.get('/', (req, res) => res.redirect('/admin'));
 
     //admin route
     router.get('/admin', getAdminPage);
+    router.get('/admin/user', getAdminUserPage);
+    router.get('/admin/create-user', getCreateUserPage);
+    router.post('/admin/handle-create-user', fileUploadMiddleware('avatar'), postCreateUser);
+    router.get('/admin/view-user/:id', getUserById);
+    router.post('/admin/handle-update-user', postUpdateUser);
+    router.post('/admin/delete-user/:id', postDeleteUser);
 
     app.use('/', router);
 };
 
 export default webRoutes;
-
