@@ -2,3 +2,9 @@ node_modules
 .idea
 dist
 .env
+
+# Runtime uploads (seed product images are kept in image-product/)
+/public/images/*.png
+/public/images/*.jpg
+/public/images/*.jpeg
+/public/images/*.webp
