@@ -1,11 +1,11 @@
-import e, {Request, Response} from 'express';
+import {Request, Response} from 'express';
 import {
     handleCreateUserService,
+    getAllRolesService,
     getAllUsersService,
     handleDeleteUserService,
     getUserByIdService, handleUpdateUserService
-} from "services/user-service";
-import {ACCOUNT_TYPE} from "config/constant";
+} from "services/admin/user-service";
 const getAdminUserPage = async (req: Request, res: Response) => {
     const users = await getAllUsersService();
     return res.render("admin/user/showUser", {
@@ -13,15 +13,16 @@ const getAdminUserPage = async (req: Request, res: Response) => {
     });
 }
 
-const getCreateUserPage = (req: Request, res: Response) => {
-    return res.render("admin/user/createUser");
+const getCreateUserPage = async (req: Request, res: Response) => {
+    const roles = await getAllRolesService();
+    return res.render("admin/user/createUser", {roles});
 }
 
 const postCreateUser = async (req: Request, res: Response) => {
-    const {fullName, username, phone, role, address} = req.body;
+    const {fullName, username, phone, roleId, address} = req.body;
     const file = req.file;
-    const avatar = file.fieldname ?? null;
-    await handleCreateUserService(fullName, username, address, phone, avatar);
+    const avatar = file?.filename ?? null;
+    await handleCreateUserService(fullName, username, address, phone, avatar, Number(roleId));
     return res.redirect("/admin/user");
 }
 
@@ -33,16 +34,22 @@ const postDeleteUser = async (req: Request<{ id: string }>, res: Response) => {
 
 const getUserById = async (req: Request<{ id: string }>, res: Response) => {
     const {id} = req.params;
-    const user = await getUserByIdService(id);
+    const [user, roles] = await Promise.all([
+        getUserByIdService(id),
+        getAllRolesService()
+    ]);
+
     return res.render("admin/user/detailUser", {
-        id : id,
-        user: user
+        user,
+        roles
     })
 }
 
 const postUpdateUser = async (req: Request, res: Response) => {
-    const { id, name, email, address } = req.body;
-    await handleUpdateUserService( id, name, email, address );
+    const {id, fullName, username, phone, roleId, address} = req.body;
+    const file = req.file;
+    const avatar = file?.filename;
+    await handleUpdateUserService( Number(id), fullName, username, phone, Number(roleId), avatar, address );
     return res.redirect("/admin/user");
 }
 

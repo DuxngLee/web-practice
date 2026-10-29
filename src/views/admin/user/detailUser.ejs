@@ -9,6 +9,31 @@
     <title>User Detail - Laptopshop</title>
     <link href="/admin/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(() => {
+            const avatarFile = $("#avatar");
+            const avatarPreview = $("#avatarPreview");
+            const currentAvatar = avatarPreview.attr("src");
+
+            avatarFile.change(function (e) {
+                const file = e.target.files[0];
+
+                if (!file) {
+                    if (currentAvatar) {
+                        avatarPreview.attr("src", currentAvatar).show();
+                    } else {
+                        avatarPreview.hide().removeAttr("src");
+                    }
+                    return;
+                }
+
+                const imgURL = URL.createObjectURL(file);
+                avatarPreview.attr("src", imgURL).show();
+            });
+        });
+    </script>
 </head>
 <body class="sb-nav-fixed">
 <%- include('../layout/header') %>
@@ -23,25 +48,68 @@
                     <li class="breadcrumb-item"><a href="/admin/user">Users</a></li>
                     <li class="breadcrumb-item active">Detail</li>
                 </ol>
-                <div class="row">
-                    <div class="col-md-6 col-12 mx-auto">
-                        <h3>Update user: <%= user.id %></h3>
-                        <form action="/admin/handle-update-user" method="post">
+                <div class="row pb-5">
+                    <div class="col-xl-7 col-lg-9 col-md-10 col-12 mx-auto">
+                        <section class="create-user-form" aria-labelledby="update-user-title">
+                        <h3 id="update-user-title">Update user: <%= user.id %></h3>
+                        <form action="/admin/handle-update-user" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<%= user.id %>">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name:</label>
-                                <input name="name" value="<%= user.fullName %>" type="text" class="form-control" id="name" placeholder="your name">
+                                <label for="name" class="form-label">Full name:</label>
+                                <input name="fullName" value="<%= user.fullName ?? '' %>" type="text" class="form-control"
+                                       id="name" placeholder="Your name" autocomplete="name" required>
                             </div>
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email:</label>
-                                <input name="email" value="<%= user.username %>" type="email" class="form-control" id="email" placeholder="name@example.com">
+                                <input name="username" value="<%= user.username ?? '' %>" type="email" class="form-control"
+                                       id="email" placeholder="name@example.com" autocomplete="email" required>
                             </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone:</label>
+                                    <input name="phone" value="<%= user.phone ?? '' %>" type="tel" class="form-control"
+                                           id="phone" placeholder="e.g. 0912 345 678" autocomplete="tel">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="role" class="form-label">Role:</label>
+                                    <select name="roleId" class="form-select" id="role">
+                                        <% if (typeof roles !== 'undefined' && roles.length) { %>
+                                            <% roles.forEach(function (role) { %>
+                                                <option value="<%= role.id %>" <%= role.id === user.roleId ? 'selected' : '' %>>
+                                                    <%= role.name %>
+                                                </option>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <option value="<%= user.roleId %>" selected>Role ID: <%= user.roleId %></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="avatar" class="form-label">Avatar:</label>
+                                <input name="avatar" type="file" class="form-control" id="avatar"
+                                       accept="image/png,image/jpeg,image/webp">
+                                <% if (user.avatar && user.avatar.trim()) { %>
+                                    <img id="avatarPreview" src="/images/<%= user.avatar %>"
+                                         class="img-thumbnail mt-3" alt="Avatar of <%= user.fullName ?? 'user' %>">
+                                <% } else { %>
+                                    <img id="avatarPreview" class="img-thumbnail mt-3" alt="Avatar preview"
+                                         style="display: none">
+                                <% } %>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address:</label>
-                                <textarea name="address" class="form-control" id="address" rows="3"><%= user.address %></textarea>
+                                <textarea name="address" class="form-control" id="address" rows="3"
+                                          placeholder="Enter address" autocomplete="street-address"><%= user.address ?? '' %></textarea>
                             </div>
-                            <button type="submit" class="btn btn-warning">Update</button>
+
+                            <button type="submit" class="btn btn-warning create-user-submit">Update</button>
                         </form>
+                        </section>
                     </div>
                 </div>
             </div>

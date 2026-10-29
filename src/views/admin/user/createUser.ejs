@@ -66,13 +66,10 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="role" class="form-label">Role:</label>
-                                        <select name="role" class="form-select" id="role">
+                                        <select name="roleId" class="form-select" id="role" required>
                                             <option value="" selected disabled>Choose...</option>
-                                            <% const roleOptions = typeof roles !== "undefined" && roles.length
-                                                ? roles
-                                                : [{ name: "ADMIN" }, { name: "USER" }]; %>
-                                            <% roleOptions.forEach(function (role) { %>
-                                                <option value="<%= role.name %>"><%= role.name %></option>
+                                            <% roles.forEach(function (role) { %>
+                                                <option value="<%= role.id %>"><%= role.name %></option>
                                             <% }) %>
                                         </select>
                                     </div>

@@ -30,7 +30,7 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>No.</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Address</th>
@@ -38,9 +38,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% users.forEach(function (user) { %>
+                    <% users.forEach(function (user, index) { %>
                         <tr>
-                            <td><%= user.id %></td>
+                            <td><%= index + 1 %></td>
                             <td><%= user.fullName %></td>
                             <td><%= user.username %></td>
                             <td><%= user.address %></td>

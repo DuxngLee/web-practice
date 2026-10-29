@@ -1,10 +1,8 @@
-import mysql from "mysql2/promise";
-import getConnection from "config/database";
 import {prisma} from "config/client";
 import {ACCOUNT_TYPE} from "config/constant";
 import bcrypt from "bcrypt";
 
-const handleCreateUserService = async ( name: string, email: string, address: string, phone: string, avatar: string | null ) => {
+const handleCreateUserService = async (name: string, email: string, address: string, phone: string, avatar: string | null, roleId: number) => {
     const hashedPassword = await bcrypt.hash("123456", 10);
     const newUser = await prisma.user.create({
         data: {
@@ -13,11 +11,20 @@ const handleCreateUserService = async ( name: string, email: string, address: st
             address: address,
             phone: phone,
             accountType: ACCOUNT_TYPE.SYSTEM,
+            role: {
+                connect: {id: roleId}
+            },
             avatar: avatar,
             password: hashedPassword,
         }
     });
     return newUser;
+}
+
+const getAllRolesService = async () => {
+    return prisma.role.findMany({
+        orderBy: {name: "asc"}
+    });
 }
 
 const getAllUsersService = async () => {
@@ -43,14 +50,17 @@ const getUserByIdService = async (id: string) => {
     return getUser;
 }
 
-const handleUpdateUserService = async (id: string, name: string, email: string, address: string) => {
+const handleUpdateUserService = async (id: number, fullName: string, username: string, phone: string, roleId: number, avatar: string | undefined, address: string) => {
     const updateUser = await prisma.user.update({
         where: {
             id: +id
         },
         data: {
-            fullName: name,
-            username: email,
+            fullName: fullName,
+            username: username,
+            phone: phone,
+            roleId: roleId,
+            ...(avatar !== undefined && { avatar }),
             address: address
         }
     });
@@ -59,6 +69,7 @@ const handleUpdateUserService = async (id: string, name: string, email: string, 
 
 export {
     handleCreateUserService,
+    getAllRolesService,
     getAllUsersService,
     handleDeleteUserService,
     getUserByIdService,
