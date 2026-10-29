@@ -1,0 +1,41 @@
+<%- include("../layout/header", { currentPage: "home" }) %>
+<%- include("../layout/banner") %>
+<%- include("../layout/feature") %>
+<main id="products" class="products-section">
+    <div class="container">
+        <div class="section-heading d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <h2>Tất cả sản phẩm</h2>
+            <span class="product-count"><%= products.length %> sản phẩm</span>
+        </div>
+        <div id="product-grid" class="row g-4">
+            <% products.forEach((product) => { %>
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+                    <article class="product-card">
+                        <a href="/product/<%= product.id %>" class="product-image">
+                            <% if (product.image) { %>
+                                <img src="/images/image-product/<%= product.image %>" alt="<%= product.name || 'Sản phẩm' %>">
+                            <% } else { %>
+                                <span class="product-image-placeholder"><i class="fas fa-laptop"></i></span>
+                            <% } %>
+                        </a>
+                        <% if (product.factory) { %><span class="product-badge"><%= product.factory %></span><% } %>
+                        <div class="product-body">
+                            <h4><a href="/product/<%= product.id %>"><%= product.name || 'Sản phẩm chưa có tên' %></a></h4>
+                            <p><%= product.shortDesc || 'Đang cập nhật thông tin sản phẩm.' %></p>
+                            <div class="product-meta">
+                                <strong><%= new Intl.NumberFormat('vi-VN').format(product.price) %> ₫</strong>
+                                <button type="button" class="add-cart" data-add-to-cart data-product-id="<%= product.id %>">
+                                    <i class="fas fa-shopping-bag"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            <% }); %>
+            <% if (products.length === 0) { %>
+                <div class="col-12"><p class="product-empty">Hiện chưa có sản phẩm nào.</p></div>
+            <% } %>
+        </div>
+    </div>
+</main>
+<%- include("../layout/footer") %>
