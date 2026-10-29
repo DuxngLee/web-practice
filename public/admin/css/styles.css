@@ -79,6 +79,63 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+/* Create product */
+.product-create-page {
+  padding: 3rem 0 4rem;
+  background: #fff;
+}
+
+.product-create-panel {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.product-create-panel h1 {
+  margin-bottom: 1.25rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.product-create-panel .form-label {
+  margin-bottom: 0.45rem;
+  color: #343a40;
+  font-size: 1rem;
+}
+
+.product-create-panel .form-control,
+.product-create-panel .form-select {
+  min-height: 46px;
+}
+
+.product-create-panel textarea.form-control {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.product-image-preview {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.product-image-preview[hidden] {
+  display: none;
+}
+
+.product-image-preview img {
+  width: 150px;
+  height: 105px;
+  object-fit: cover;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+@media (max-width: 767.98px) {
+  .product-create-page { padding-top: 1.5rem; }
+  .product-create-panel h1 { font-size: 1.35rem; }
+}
+
 *,
 *::before,
 *::after {
@@ -1934,6 +1991,68 @@ progress {
   .table-responsive-sm {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Product manager */
+.product-manager h1 {
+  font-weight: 600;
+}
+
+.product-manager h3 {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.product-table {
+  min-width: 980px;
+}
+
+.product-table th,
+.product-table td {
+  padding: 0.65rem 0.75rem;
+  vertical-align: middle;
+}
+
+.product-table th:first-child {
+  width: 70px;
+}
+
+.product-table th:nth-child(2) {
+  width: 105px;
+}
+
+.product-table th:nth-child(6) {
+  width: 260px;
+}
+
+.product-table th:last-child {
+  width: 180px;
+}
+
+.product-table-image {
+  display: block;
+  width: 72px;
+  height: 52px;
+  object-fit: contain;
+  padding: 0.2rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  background: #fff;
+}
+
+@media (max-width: 575.98px) {
+  .product-manager h3 {
+    font-size: 1.4rem;
+  }
+
+  .product-manager .btn-warning {
+    width: 100%;
+  }
+
+  .product-table .btn-warning,
+  .product-table .btn-danger {
+    width: auto;
   }
 }
 @media (max-width: 767.98px) {

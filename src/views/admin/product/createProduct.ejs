@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Create a product in Laptopshop admin">
+    <title>Create Product - Laptopshop</title>
+    <link href="/admin/css/styles.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+<%- include('../layout/header') %>
+<div id="layoutSidenav">
+    <%- include('../layout/sidenav') %>
+    <div id="layoutSidenav_content">
+        <main class="product-create-page">
+            <div class="container-fluid px-4">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+                        <section class="product-create-panel" aria-labelledby="create-product-title">
+                            <h1 id="create-product-title">Create a product:</h1>
+                            <% if (imageWasDiscarded) { %>
+                                <div class="alert alert-warning" role="alert">
+                                    Please choose the image again after correcting the fields below.
+                                </div>
+                            <% } %>
+                            <form id="createProductForm" action="/admin/handle-create-product" method="post" enctype="multipart/form-data" novalidate>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input name="name" type="text" maxlength="255" class="form-control <%= errors.name ? 'is-invalid' : '' %>" id="name" value="<%= product.name %>" required>
+                                        <% if (errors.name) { %><div class="invalid-feedback"><%= errors.name[0] %></div><% } %>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="price" class="form-label">Price</label>
+                                        <input name="price" type="number" min="1" max="2147483647" step="1" class="form-control <%= errors.price ? 'is-invalid' : '' %>" id="price" value="<%= product.price %>" required>
+                                        <% if (errors.price) { %><div class="invalid-feedback"><%= errors.price[0] %></div><% } %>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="detailDesc" class="form-label">Detail Description:</label>
+                                        <textarea name="detailDesc" class="form-control <%= errors.detailDesc ? 'is-invalid' : '' %>" id="detailDesc" rows="5"><%= product.detailDesc %></textarea>
+                                        <% if (errors.detailDesc) { %><div class="invalid-feedback"><%= errors.detailDesc[0] %></div><% } %>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="shortDesc" class="form-label">Short Description</label>
+                                        <input name="shortDesc" type="text" maxlength="255" class="form-control <%= errors.shortDesc ? 'is-invalid' : '' %>" id="shortDesc" value="<%= product.shortDesc %>">
+                                        <% if (errors.shortDesc) { %><div class="invalid-feedback"><%= errors.shortDesc[0] %></div><% } %>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="quantity" class="form-label">Quantity</label>
+                                        <input name="quantity" type="number" min="0" max="2147483647" step="1" class="form-control <%= errors.quantity ? 'is-invalid' : '' %>" id="quantity" value="<%= product.quantity %>" required>
+                                        <% if (errors.quantity) { %><div class="invalid-feedback"><%= errors.quantity[0] %></div><% } %>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="factory" class="form-label">Factory</label>
+                                        <select name="factory" class="form-select <%= errors.factory ? 'is-invalid' : '' %>" id="factory">
+                                            <% factoryOptions.forEach(([value, label]) => { %>
+                                                <option value="<%= value %>" <%= product.factory === value ? 'selected' : '' %>><%= label %></option>
+                                            <% }) %>
+                                        </select>
+                                        <% if (errors.factory) { %><div class="invalid-feedback"><%= errors.factory[0] %></div><% } %>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="target" class="form-label">Target</label>
+                                        <select name="target" class="form-select <%= errors.target ? 'is-invalid' : '' %>" id="target">
+                                            <% targetOptions.forEach(([value, label]) => { %>
+                                                <option value="<%= value %>" <%= product.target === value ? 'selected' : '' %>><%= label %></option>
+                                            <% }) %>
+                                        </select>
+                                        <% if (errors.target) { %><div class="invalid-feedback"><%= errors.target[0] %></div><% } %>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="image" class="form-label">Image</label>
+                                        <input name="image" type="file" class="form-control" id="image" accept="image/png,image/jpeg,image/webp">
+                                        <div id="productImagePreviewWrap" class="product-image-preview mt-3" hidden>
+                                            <img id="productImagePreview" alt="Product preview">
+                                            <button id="removeProductImage" type="button" class="btn btn-sm btn-outline-danger">Remove image</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-warning mt-3 px-3">Submit</button>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <%- include('../layout/footer') %>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/admin/js/scripts.js"></script>
+<script>
+    (() => {
+        const input = document.getElementById('image');
+        const previewWrap = document.getElementById('productImagePreviewWrap');
+        const preview = document.getElementById('productImagePreview');
+        const removeButton = document.getElementById('removeProductImage');
+        let objectUrl;
+
+        const clearPreview = () => {
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            objectUrl = undefined;
+            input.value = '';
+            preview.removeAttribute('src');
+            previewWrap.hidden = true;
+        };
+
+        input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+            if (!file) return clearPreview();
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            objectUrl = URL.createObjectURL(file);
+            preview.src = objectUrl;
+            previewWrap.hidden = false;
+        });
+
+        removeButton.addEventListener('click', clearPreview);
+    })();
+</script>
+</body>
+</html>

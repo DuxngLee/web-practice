@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Manage Laptopshop products">
+    <title>Manage Products - Laptopshop</title>
+    <link href="/admin/css/styles.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+<%- include('../layout/header') %>
+<div id="layoutSidenav">
+    <%- include('../layout/sidenav') %>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4 product-manager">
+                <h1 class="mt-4">Manage Products</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Products</li>
+                </ol>
+
+                <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center">
+                    <h3 class="mb-0">Table Products:</h3>
+                    <a href="/admin/create-product" class="btn btn-warning">Create a new product</a>
+                </div>
+                <hr>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle product-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Factory</th>
+                                <th>Target</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% const productList = typeof products !== 'undefined' ? products : []; %>
+                            <% productList.forEach((product, index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td>
+                                        <% if (product.image) { %>
+                                            <img class="product-table-image" src="/images/image-product/<%= product.image %>" alt="<%= product.name %>">
+                                        <% } %>
+                                    </td>
+                                    <td class="fw-semibold"><%= product.name %></td>
+                                    <td><%= product.price %></td>
+                                    <td><%= product.factory %></td>
+                                    <td><%= product.target %></td>
+                                    <td>
+                                        <div class="d-flex flex-nowrap gap-2">
+                                            <a href="/admin/view-product/<%= product.id %>" class="btn btn-warning">View</a>
+                                            <form action="/admin/delete-product/<%= product.id %>" method="post">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                            <% if (productList.length === 0) { %>
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">No products found.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <%- include('../layout/footer') %>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/admin/js/scripts.js"></script>
+</body>
+</html>
